@@ -16,7 +16,7 @@ export default function Home() {
   const cards = isVisible && names.map((name, index) => <Card key={index}>{name}</Card>);
 
   return (
-    <div className='p-20 space-y-4'>
+    <div className='space-y-4'>
       <div>Hello, {name}</div>
       {cards}
       <div className='flex space-x-4'>

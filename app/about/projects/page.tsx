@@ -7,8 +7,8 @@ import { Suspense } from 'react';
 
 export default async function ProjectsPage() {
   return (
-    <div className='p-20'>
-      <h1 className='mb-8 text-xl'>Projects</h1>
+    <div>
+      <h1 className='mt-2 mb-8 text-xl'>Projects</h1>
       <div className='mb-8'>Hello, this is the list of my repos!</div>
       <Suspense fallback={<ProjectListLoading />}>
         <ProjectList />
