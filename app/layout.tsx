@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
-const inter = Inter({ subsets: ['latin'] });
+const roboto = Roboto({ weight: ['400', '700'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Next14 Blog',
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' data-lt-installed='true' suppressHydrationWarning={true}>
-      <body className={inter.className} suppressHydrationWarning={true}>
+      <body className={roboto.className} suppressHydrationWarning={true}>
         <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
           <Header />
           <main className='mt-12'>{children}</main>

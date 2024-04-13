@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { paramsSchema } from '@/ValidationSchemas/params';
 
 interface Params {
@@ -15,6 +16,10 @@ export default function BlogPage({ params }: { params: Params }) {
   }
 
   const validatedParams = validationResult.data;
+
+  if (!['first', 'second'].includes(validatedParams.slug)) {
+    notFound();
+  }
 
   return <>Hello! {validatedParams.slug}</>;
 }

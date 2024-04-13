@@ -2,7 +2,7 @@ import { reposSchema } from '@/ValidationSchemas/repos';
 import Card from '@/components/Card';
 
 export default async function ProjectList() {
-  const response = await fetch('http://localhost:3001/repos', { cache: 'no-store' });
+  const response = await fetch('http://localhost:3001/repos');
   const jsonData = await response.json();
   const validationResult = await reposSchema.safeParseAsync(jsonData);
 
@@ -16,7 +16,7 @@ export default async function ProjectList() {
             <Card className='font-mono h-full'>
               <div className='flex justify-between items-center mb-4'>
                 <div className='font-semibold'>{repo.title}</div>
-                <div> ⭐ {repo.stargazers_count}</div>
+                <div>⭐{repo.stargazers_count}</div>
               </div>
               <div>{repo.description}</div>
             </Card>

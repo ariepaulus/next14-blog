@@ -58,6 +58,10 @@
   }
 }
 
+hr {
+  @apply my-8 border-gray-200 dark:border-gray-800
+}
+
 @layer components {
   .navbar-link {
     @apply font-medium text-muted-foreground transition-colors hover:text-primary;
