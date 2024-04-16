@@ -1,25 +1,58 @@
 import { notFound } from 'next/navigation';
-import { paramsSchema } from '@/ValidationSchemas/params';
+import { type MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MdxContent } from '@/app/mdx-content';
+import { promises as fs } from 'fs';
 
-interface Params {
-  slug: string;
+type Frontmatter = {
+  title: string;
+  date: string;
+};
+
+type Post<TFrontmatter> = {
+  serialized: MDXRemoteSerializeResult;
+  frontmatter: TFrontmatter;
+};
+
+async function getPost(filepath: string): Promise<Post<Frontmatter>> {
+  // Read the file from the filesystem
+  const raw = await fs.readFile(filepath, 'utf-8');
+
+  // Serialize the MDX content and parse the frontmatter
+  const serialized = await serialize(raw, {
+    parseFrontmatter: true,
+  });
+
+  // Typecast the frontmatter to the correct type
+  const frontmatter = serialized.frontmatter as Frontmatter;
+
+  // Return the serialized content and frontmatter
+  return {
+    frontmatter,
+    serialized,
+  };
 }
 
-export default function BlogPage({ params }: { params: Params }) {
-  // Validate the params object against the schema
-  const validationResult = paramsSchema.safeParse(params);
+interface BlogPageProps {
+  params: {
+    slug: string;
+  };
+}
 
-  if (!validationResult.success) {
-    // Handle validation error
-    console.error('Validation error:', validationResult.error);
-    return <>Invalid params</>;
+export default async function BlogPage({ params }: BlogPageProps) {
+  let post;
+
+  try {
+    post = await getPost(`content/${params.slug}.mdx`);
+  } catch (error) {
+    return notFound();
   }
 
-  const validatedParams = validationResult.data;
-
-  if (!['first', 'second'].includes(validatedParams.slug)) {
-    notFound();
-  }
-
-  return <>Hello! {validatedParams.slug}</>;
+  return (
+    <article className='prose dark:prose-invert'>
+      <div style={{ maxWidth: 600, margin: 'auto' }}>
+        <MdxContent source={post.serialized} />
+      </div>
+    </article>
+  );
 }

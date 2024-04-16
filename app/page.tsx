@@ -1,34 +1,47 @@
-'use client';
+import { type MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { promises as fs } from 'fs';
+import { serialize } from 'next-mdx-remote/serialize';
+import { MdxContent } from './mdx-content';
 
-import { useState } from 'react';
-import Card from '@/components/Card';
+type Frontmatter = {
+  title: string;
+  date: string;
+};
 
-export default function Home() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [names, setNames] = useState(['Arie', 'Paul', 'John']);
-  const name = 'Arie';
-  const handleClick = () => {
-    setIsVisible(!isVisible);
+type Post<TFrontmatter> = {
+  serialized: MDXRemoteSerializeResult;
+  frontmatter: TFrontmatter;
+};
+
+async function getPost(filepath: string): Promise<Post<Frontmatter>> {
+  // Read the file from the filesystem
+  const raw = await fs.readFile(filepath, 'utf-8');
+
+  // Serialize the MDX content and parse the frontmatter
+  const serialized = await serialize(raw, {
+    parseFrontmatter: true,
+  });
+
+  // Typecast the frontmatter to the correct type
+  const frontmatter = serialized.frontmatter as Frontmatter;
+
+  // Return the serialized content and frontmatter
+  return {
+    frontmatter,
+    serialized,
   };
-  const handleAddName = () => {
-    setNames([...names, 'New Name']);
-  };
-  const cards =
-    isVisible &&
-    names.map((name, index) => (
-      <Card key={index} className=''>
-        {name}
-      </Card>
-    ));
+}
+
+export default async function Home() {
+  // Get the serialized content and frontmatter
+  const { serialized, frontmatter } = await getPost('content/post.mdx');
 
   return (
-    <div className='space-y-4'>
-      <div>Hello, {name}</div>
-      {cards}
-      <div className='flex space-x-4'>
-        <button onClick={handleClick}>{isVisible ? 'Hide Names' : 'Show Names'}</button>
-        <button onClick={handleAddName}>Add Name</button>
-      </div>
+    <div style={{ maxWidth: 600, margin: 'auto' }}>
+      <h1>{frontmatter.title}</h1>
+      <p>Published {frontmatter.date}</p>
+      <hr />
+      <MdxContent source={serialized} />
     </div>
   );
 }

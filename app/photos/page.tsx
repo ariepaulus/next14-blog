@@ -3,6 +3,11 @@ import dog1 from '../../public/images/dog1.webp';
 import dog2 from '../../public/images/dog2.webp';
 import dog3 from '../../public/images/dog3.webp';
 import dog4 from '../../public/images/dog4.webp';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Photos',
+};
 
 export default function PhotosPage() {
   return (
