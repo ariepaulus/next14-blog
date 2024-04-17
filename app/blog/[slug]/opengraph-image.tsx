@@ -4,7 +4,7 @@ import { ImageResponse } from 'next/og';
 export const runtime = 'edge';
 
 // Image metadata
-export const alt = 'About Acme';
+export const alt = 'About portfolio of Arie Verburgh';
 export const size = {
   width: 1200,
   height: 630,
