@@ -3,6 +3,7 @@ import H1 from '@/components/H1';
 import Pagination from '@/components/Pagination';
 import { getPosts } from '@/lib/posts';
 import Link from 'next/link';
+import { searchParamsSchema } from '@/ValidationSchemas/searchParams';
 
 interface BlogPostsPageProps {
   searchParams: {
@@ -16,8 +17,14 @@ interface BlogPostsPageProps {
 export default async function BlogPostsPage({
   searchParams = { tags: [], order: 'newest', page: 1, limit: 3 },
 }: BlogPostsPageProps) {
-  // Deconstruct searchParams with default values
-  const { tags, order = 'newest', page = 1, limit = 3 } = searchParams;
+  const validation = searchParamsSchema.safeParse(searchParams);
+  if (!validation.success) {
+    console.error('Validation error:', validation.error);
+    return notFound(); // Or handle validation failure appropriately
+  }
+
+  // Now using the validated and parsed search parameters
+  const { tags, order = 'newest', page = 1, limit = 3 } = validation.data;
 
   // Fetch posts based on the search parameters
   const { posts, pageCount } = await getPosts({
