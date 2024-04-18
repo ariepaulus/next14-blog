@@ -4,6 +4,7 @@ import dog2 from '../../public/images/dog2.webp';
 import dog3 from '../../public/images/dog3.webp';
 import dog4 from '../../public/images/dog4.webp';
 import { Metadata } from 'next';
+import H1 from '@/components/mdx/H1';
 
 export const metadata: Metadata = {
   title: 'Photos',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default function PhotosPage() {
   return (
     <div>
-      <h1 className='text-2xl mb-8 font-semibold'>My Photos</h1>
+      <H1>My Photos</H1>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <div className='h-60 overflow-hidden relative'>
           <Image

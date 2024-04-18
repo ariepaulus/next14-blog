@@ -1,47 +1,50 @@
-import { type MDXRemoteSerializeResult } from 'next-mdx-remote';
-import { promises as fs } from 'fs';
-import { serialize } from 'next-mdx-remote/serialize';
-import { MdxContent } from './mdx-content';
-
-type Frontmatter = {
-  title: string;
-  date: string;
-};
-
-type Post<TFrontmatter> = {
-  serialized: MDXRemoteSerializeResult;
-  frontmatter: TFrontmatter;
-};
-
-async function getPost(filepath: string): Promise<Post<Frontmatter>> {
-  // Read the file from the filesystem
-  const raw = await fs.readFile(filepath, 'utf-8');
-
-  // Serialize the MDX content and parse the frontmatter
-  const serialized = await serialize(raw, {
-    parseFrontmatter: true,
-  });
-
-  // Typecast the frontmatter to the correct type
-  const frontmatter = serialized.frontmatter as Frontmatter;
-
-  // Return the serialized content and frontmatter
-  return {
-    frontmatter,
-    serialized,
-  };
-}
+import H1 from '@/components/mdx/H1';
+import { getPosts } from '@/lib/posts';
+import Link from 'next/link';
 
 export default async function Home() {
-  // Get the serialized content and frontmatter
-  const { serialized, frontmatter } = await getPost('content/post.mdx');
+  const { posts } = await getPosts({
+    newest: true,
+    limit: 3,
+  });
 
   return (
-    <div style={{ maxWidth: 600, margin: 'auto' }}>
-      <h1>{frontmatter.title}</h1>
-      <p>Published {frontmatter.date}</p>
-      <hr />
-      <MdxContent source={serialized} />
-    </div>
+    <>
+      <section className='mb-8'>
+        <H1>Welcome to my page!</H1>
+        <p>My name is Arie, I am a web developer.</p>
+        <p>
+          Checkout my{' '}
+          <Link href='/about/projects' className='underline'>
+            projects
+          </Link>
+          ,{' '}
+          <Link href='/photos' className='underline'>
+            photos
+          </Link>{' '}
+          and{' '}
+          <Link href='/blog' className='underline'>
+            blog
+          </Link>
+          .
+        </p>
+      </section>
+
+      <section>
+        <h2 className='text-lg mb-8'>Latest on the blog</h2>
+        <ul className='font-mono'>
+          {posts.map(post => (
+            <li key={post.slug}>
+              <span className='text-gray-400'>
+                {post.frontmatter.date}&nbsp;
+              </span>
+              <Link href={`/blog/${post.slug}`} className='underline'>
+                {post.frontmatter.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
   );
 }

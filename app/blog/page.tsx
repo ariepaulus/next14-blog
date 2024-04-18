@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import H1 from '@/components/H1';
+import H1 from '@/components/mdx/H1';
 import Pagination from '@/components/Pagination';
 import { getPosts } from '@/lib/posts';
 import Link from 'next/link';

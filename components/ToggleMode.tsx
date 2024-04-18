@@ -17,7 +17,12 @@ const ToggleMode = () => {
   const dark = theme === 'dark';
 
   return (
-    <Button variant='outline' size='icon' onClick={() => setTheme(`${dark ? 'light' : 'dark'}`)}>
+    <Button
+      variant='outline'
+      size='icon'
+      ariaLabel={theme}
+      onClick={() => setTheme(`${dark ? 'light' : 'dark'}`)}
+    >
       {dark ? (
         <Sun className='hover:cursor-pointer hover:text-primary' />
       ) : (

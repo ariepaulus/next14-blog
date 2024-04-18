@@ -1,5 +1,9 @@
 import type { MDXComponents } from 'mdx/types';
 import Image, { ImageProps } from 'next/image';
+import H1 from './components/mdx/H1';
+import H2 from './components/mdx/H2';
+import P from './components/mdx/P';
+import HeroImage from './components/mdx/HeroImage';
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any
@@ -9,9 +13,9 @@ import Image, { ImageProps } from 'next/image';
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // Allows customizing built-in components, e.g. to add styling.
-    h1: ({ children }) => (
-      <h1 style={{ color: '#888080', fontSize: '48px' }}>{children}</h1>
-    ),
+    h1: ({ children }) => <H1>{children}</H1>,
+    h2: ({ children }) => <H2>{children}</H2>,
+    p: ({ children }) => <P>{children}</P>,
     img: props => (
       <Image
         sizes='100vw'
@@ -20,6 +24,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         alt='Image'
       />
     ),
+    HeroImage,
     ...components,
   };
 }
